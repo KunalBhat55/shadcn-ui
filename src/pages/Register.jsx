@@ -24,7 +24,8 @@ function Register() {
 
   const onSubmit = (data) => console.log(data);
 
-  const handleNext = async () => {
+  const 
+  handleNext = async () => {
     const isValid = await trigger();
     console.log(isValid);
     if (isValid) {
@@ -39,7 +40,7 @@ function Register() {
           <div className="bg-white p-10 rounded-md shadow-md">
             <h2 className="text-2xl font-semibold text-center">Welcome</h2>
             <p className="text-gray-500 text-center">
-              Let's get you registered
+              Let&apos;s get started by creating an account
             </p>
             <Button onClick={handleNext}>Get Started</Button>
           </div>
