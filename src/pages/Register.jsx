@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
 
 function Register() {
   const [step, setStep] = useState(0);
@@ -12,82 +14,145 @@ function Register() {
     });
   };
 
-  const handleStart = () => {
-    setStep(1);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    trigger,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => console.log(data);
+
+  const handleNext = async () => {
+    const isValid = await trigger();
+    console.log(isValid);
+    if (isValid) {
+      setStep(step + 1);
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      {step === 0 && (
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">
-            Welcome to the Course Enrollment
-          </h1>
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-            onClick={handleStart}
-          >
-            Start
-          </button>
-        </div>
-      )}
-      {step === 1 && (
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-4">
-            Question 1: What is your name?
-          </h2>
-          <input
-            className="border p-2 mb-4"
-            type="text"
-            name="name"
-            onChange={handleChange}
-          />
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-            onClick={() => setStep(2)}>
-            Next
-          </button>
-        </div>
-      )}
-      {step === 2 && (
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-4">
-            Question 2: What is your email?
-          </h2>
-          <input
-            className="border p-2 mb-4"
-            type="email"
-            name="email"
-            onChange={handleChange}
-          />
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-            onClick={() => setStep(3)}
-          >
-            Next
-          </button>
-        </div>
-      )}
-      {step === 3 && (
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-4">
-            Thank you for registering!
-          </h2>
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-            onClick={() => setStep(4)}
-          >
-            View Data
-          </button>
-        </div>
-      )}
-      {step === 4 && (
-        <div className="text-center">
-          <h2 className="text-xl font-bold py-2">Data Entered</h2>
-          <p>Name: {data.name}</p>
-          <p>Email: {data.email}</p>
-        </div>
-      )}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {step === 0 && (
+          <div className="bg-white p-10 rounded-md shadow-md">
+            <h2 className="text-2xl font-semibold text-center">Welcome</h2>
+            <p className="text-gray-500 text-center">
+              Let's get you registered
+            </p>
+            <Button onClick={handleNext}>Get Started</Button>
+          </div>
+        )}
+
+        {step === 1 && (
+          <div className="bg-white p-10 rounded-md shadow-md">
+            <h2 className="text-2xl font-semibold text-center">
+              Create Account
+            </h2>
+            <p className="text-gray-500 text-center">
+              Please fill in the form below
+            </p>
+            <div className="grid grid-cols-1 gap-6 mt-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  className={`w-full p-3 border rounded-md ${
+                    errors.name ? "border-red-500" : "border-gray-300"
+                  }`}
+                  {...register("name", { required: "Full name is required" })}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  className={`w-full p-3 border rounded-md ${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  }`}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Invalid email format",
+                    },
+                  })}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className={`w-full p-3 border rounded-md ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  }`}
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+              <Button onClick={handleNext}>Next</Button>
+            </div>
+          </div>
+        )}
+        {step === 2 && (
+          <div className="bg-white p-10 rounded-md shadow-md">
+            <h2 className="text-2xl font-semibold text-center">Verify Email</h2>
+            <p className="text-gray-500 text-center">
+              Please enter the code sent to your email
+            </p>
+            <div className="grid grid-cols-1 gap-6 mt-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Verification Code"
+                  className={`w-full p-3 border rounded-md ${
+                    errors.code ? "border-red-500" : "border-gray-300"
+                  }`}
+                  {...register("code", {
+                    required: "Verification code is required",
+                  })}
+                />
+                {errors.code && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.code.message}
+                  </p>
+                )}
+              </div>
+              <Button onClick={handleNext}>Verify</Button>
+            </div>
+          </div>
+        )}
+        {step === 3 && (
+          <div className="bg-white p-10 rounded-md shadow-md">
+            <h2 className="text-2xl font-semibold text-center">Success</h2>
+            <p className="text-gray-500 text-center">
+              You have successfully registered
+            </p>
+            <Button type="submit">Get Started</Button>
+          </div>
+        )}
+      </form>
     </div>
   );
 }

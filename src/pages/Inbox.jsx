@@ -9,7 +9,6 @@ function Inbox() {
           <li className='hover:underline'><Link to="/inbox/messages">Messages</Link></li>
         </ul>
       </nav>
-      <Outlet/>
     </div>
   );
 }

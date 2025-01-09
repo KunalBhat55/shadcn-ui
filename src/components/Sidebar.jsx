@@ -8,6 +8,7 @@ import {
   FaChartBar,
   FaBars,
   FaTimes,
+  FaInfoCircle,
 } from "react-icons/fa";
 
 const Sidebar = () => {
@@ -20,7 +21,7 @@ const Sidebar = () => {
     { icon: FaCalendar, text: "Calendar", path: "/calendar" },
     { icon: FaInbox, text: "Inbox", path: "/inbox" },
     { icon: FaChartBar, text: "Register", path: "/register" },
-    { icon: FaCog, text: "Settings", path: "/settings" },
+    { icon: FaInfoCircle, text: "Information", path: "/information" },
   ];
 
   return (
