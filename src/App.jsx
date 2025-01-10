@@ -6,7 +6,6 @@ import AppRoutes from "./routes/AppRoutes";
 export default function Layout({ children }) {
   return (
     <>
-      {/* <Navbar /> */}
       <AppRoutes />
     </>
   );

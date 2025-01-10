@@ -4,17 +4,19 @@ import {
   FaHome,
   FaCalendar,
   FaInbox,
-  FaCog,
   FaChartBar,
+  FaInfoCircle,
   FaBars,
   FaTimes,
-  FaInfoCircle,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
+import { Button } from "./ui/button";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
+  const toggleSidebar = () => setIsExpanded(!isExpanded);
 
   const menuItems = [
     { icon: FaHome, text: "Dashboard", path: "/" },
@@ -26,40 +28,46 @@ const Sidebar = () => {
 
   return (
     <>
-      <button
+     {/*  */}
+      <Button
         className={`fixed top-4 left-4 z-50 p-2 bg-gray-800 text-white rounded-md lg:hidden ${
-          isOpen ? "hidden" : ""
+          isExpanded ? "hidden" : ""
         }`}
         onClick={toggleSidebar}
       >
-        {isOpen ? <FaTimes /> : <FaBars />}
-      </button>
+        {isExpanded ? <FaTimes /> : <FaBars />}
+      </Button>
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-gray-900 text-white p-5 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 h-full bg-gray-900 text-white transition-all duration-300 ease-in-out ${
+          isExpanded ? "w-64" : "w-20"
         } lg:translate-x-0`}
       >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">MyApp</h2>
-          <button className="lg:hidden" onClick={toggleSidebar}>
-            <FaTimes />
-          </button>
+        <div className={`flex items-center justify-between p-4 ${isExpanded ? "mb-6" : "mb-2"}`}>
+          {isExpanded && <h2 className="text-2xl font-bold">MyApp</h2>}
+          <Button 
+            className=" rounded-full hover:bg-gray-800 transition-colors duration-200"
+            onClick={toggleSidebar}
+          >
+            {isExpanded ? <FaChevronLeft /> : <FaBars />}
+          </Button>
         </div>
         <nav>
           <ul>
             {menuItems.map((item, index) => (
-              <li key={index} className="mb-4">
+              <li key={index} className={`mb-4 ${isExpanded ? "px-4" : ""}`}>
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
-                    `flex items-center p-2 rounded-md transition-colors duration-200 ${
+                    `flex ${isExpanded ? "items-center" : "flex-col items-center"} p-2 rounded-md transition-colors duration-200 ${
                       isActive ? "bg-gray-800" : "hover:bg-gray-800"
                     }`
                   }
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => !isExpanded && setIsExpanded(true)}
                 >
-                  <item.icon className="mr-3" />
-                  <span>{item.text}</span>
+                  <item.icon className={`${isExpanded ? "mr-3" : "mb-1"} ${isExpanded ? "text-base" : "text-2xl"}`} />
+                  <span className={`${isExpanded ? "text-base" : "text-xs"} ${isExpanded ? "" : "w-full text-center"}`}>
+                    {isExpanded ? item.text : item.text.split(" ")[0]}
+                  </span>
                 </NavLink>
               </li>
             ))}
@@ -71,3 +79,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
