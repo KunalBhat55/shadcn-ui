@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState} from "react";
 import { FaPencilAlt, FaCheck, FaTimes } from "react-icons/fa";
 import { Button } from "./ui/button";
 
@@ -51,7 +51,6 @@ const ClientInfoCard = () => {
       <span className="text-gray-600 w-40">{label}:</span>
       {isEditing ? (
         <input
-          ref={inputRef}
           type="text"
           name={name}
           value={value}
@@ -70,7 +69,6 @@ const ClientInfoCard = () => {
         <h2 className="text-2xl font-semibold text-gray-800">
           {isEditing ? (
             <input
-              
               type="text"
               name="name"
               value={formData.name}
@@ -81,6 +79,7 @@ const ClientInfoCard = () => {
             formData.name
           )}
         </h2>
+        {/* Edit and Save buttons */}
         <div className="flex space-x-2">
           {isEditing ? (
             <>
