@@ -1,21 +1,9 @@
-import { useState} from "react";
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import { FaPencilAlt, FaCheck, FaTimes } from "react-icons/fa";
 import { Button } from "./ui/button";
 
-const ClientInfoCard = () => {
-  const clientData = {
-    name: "Diego Ortize",
-    status: "Deferred Action DACA",
-    docLanguage: "Spanish",
-    seekingVisa: "Yes",
-    countryOfOrigin: "Mexico",
-    intake: "08/19/2024",
-    language: "English",
-    phone: "(512)828-2929",
-    email: "Lola1234@msn.com",
-    representative: "xxxxx xxxxxxx",
-  };
-
+const ClientInfoCard = ({ clientData }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(clientData);
   const [tempData, setTempData] = useState(clientData);
@@ -37,14 +25,9 @@ const ClientInfoCard = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    setIsEditing(true);
-    
+    console.log(`{${name}: ${value}}`);
+    setFormData((prev) => ({...prev,[name]: value,}));
   };
-
 
   const InfoRow = ({ label, value, name }) => (
     <div className="flex flex-col sm:flex-row mb-2">
@@ -71,12 +54,12 @@ const ClientInfoCard = () => {
             <input
               type="text"
               name="name"
-              value={formData.name}
+              value={formData.name || ""}
               onChange={handleChange}
               className="px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           ) : (
-            formData.name
+            formData.name || "<Client Name>"
           )}
         </h2>
         {/* Edit and Save buttons */}
@@ -112,31 +95,14 @@ const ClientInfoCard = () => {
 
       {/* Display only */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
-        <InfoRow label="Status" value={formData.status} name="status" />
-        <InfoRow
-          label="Doc Language"
-          value={formData.docLanguage}
-          name="docLanguage"
-        />
-        <InfoRow
-          label="Seeking Visa"
-          value={formData.seekingVisa}
-          name="seekingVisa"
-        />
-        <InfoRow
-          label="Country of Origin"
-          value={formData.countryOfOrigin}
-          name="countryOfOrigin"
-        />
-        <InfoRow label="Intake" value={formData.intake} name="intake" />
-        <InfoRow label="Language" value={formData.language} name="language" />
-        <InfoRow label="Phone" value={formData.phone} name="phone" />
-        <InfoRow label="Email" value={formData.email} name="email" />
-        <InfoRow
-          label="Representative"
-          value={formData.representative}
-          name="representative"
-        />
+        {Object.entries(formData).map(([key, value]) => (
+          <InfoRow
+            key={key}
+            label={key.charAt(0).toUpperCase() + key.slice(1)}
+            value={value}
+            name={key}
+          />
+        ))}
       </div>
     </div>
   );

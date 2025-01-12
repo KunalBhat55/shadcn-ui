@@ -1,13 +1,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Calendar from "./Calendar";
-import ClientInfoCard from "../components/Account";
+import ClientInfoCard from "../components/ClientInfoCard";
+import { clientData, productData, employeeData } from "../data";
 
 function Information() {
-
-
+ 
   return (
     <div className="flex justify-center pr-4 space-x-16">
       <Tabs defaultValue="account" className="w-[65rem]">
+
         <TabsList className="flex space-x-24 ">
           <TabsTrigger value="account" className="px-4 py-2">
             Account
@@ -25,20 +26,16 @@ function Information() {
             Privacy
           </TabsTrigger>
         </TabsList>
+
+        {/* Tabs Content goes here */}
         <TabsContent className="mt-12 mr-64 min-h-80" value="account">
-          
-            <ClientInfoCard />
-            
+          <ClientInfoCard clientData={clientData} />
         </TabsContent>
         <TabsContent value="password" className="p-4">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis,
-          magni cum hic assumenda officiis temporibus qui nobis harum eius
-          tempora incidunt ullam sed facilis quasi quibusdam ex voluptas quas?
-          Laudantium.
+          <ClientInfoCard clientData={productData} />
         </TabsContent>
         <TabsContent value="settings" className="p-4">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-          quidem.
+          <ClientInfoCard clientData={employeeData} />
         </TabsContent>
         <TabsContent value="notifications" className="p-4">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
@@ -48,6 +45,7 @@ function Information() {
           <Calendar />
         </TabsContent>
       </Tabs>
+    
     </div>
   );
 }

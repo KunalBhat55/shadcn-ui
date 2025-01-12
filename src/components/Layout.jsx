@@ -6,6 +6,7 @@ import Header from './SearchHeader';
 const Layout = () => {
 
   const [isExpanded, setIsExpanded] = useState(true);
+  console.log(isExpanded);
 
   const toggleSidebar = () => setIsExpanded(!isExpanded);
 
