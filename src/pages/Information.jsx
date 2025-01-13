@@ -1,14 +1,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Calendar from "./Calendar";
 import ClientInfoCard from "../components/ClientInfoCard";
-import { clientData, productData, employeeData } from "../data";
+import { clientData, productData, employeeData, notesData } from "../data";
 
 function Information() {
   return (
     <div className="flex justify-center px-4 py-8 bg-gray-100 min-h-screen">
       <Tabs
         defaultValue="account"
-        className="w-full max-w-6xl bg-white rounded-lg shadow-md"
+        className="w-full max-w-6xl rounded-lg shadow-md"
       >
         <TabsList className="flex justify-between border-b border-gray-200 p-4">
           {[
@@ -28,18 +28,14 @@ function Information() {
           ))}
         </TabsList>
 
-        <div className="p-6">
+        <div className="">
           {/* Account Tab */}
           <TabsContent
-            className="rounded-lg shadow-md bg-gray-50 p-4"
+            className="rounded-lg shadow-md bg-gray-50 p-4 grid grid-cols-1 gap-4 md:grid-cols-2"
             value="account"
           >
-            <ClientInfoCard
-             
-            clientData={clientData} />
-            <ClientInfoCard
-             
-            clientData={clientData} />
+            <ClientInfoCard clientData={clientData} />
+            <ClientInfoCard clientData={productData} />
             
           </TabsContent>
           {/* Password Tab */}
@@ -61,10 +57,8 @@ function Information() {
             className="rounded-lg shadow-md bg-gray-50 p-4"
             value="notifications"
           >
-            <p className="text-gray-700">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-              quidem.
-            </p>
+            <h2>Notes & Events</h2>
+            <ClientInfoCard clientData={notesData} inputType={"textArea"}/>
           </TabsContent>
           {/* Privacy Tab */}
           <TabsContent

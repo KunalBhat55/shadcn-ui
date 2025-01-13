@@ -29,4 +29,8 @@ const employeeData = {
   hireDate: "01/15/2018",
 };
 
-export { clientData, productData, employeeData };
+const notesData = {
+  note: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem."
+}
+
+export { clientData, productData, employeeData, notesData };

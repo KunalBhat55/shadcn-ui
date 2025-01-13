@@ -1,12 +1,17 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import { FaPencilAlt, FaCheck, FaTimes } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaPencilAlt, FaCheck, FaTimes, FaTrash } from "react-icons/fa";
 import { Button } from "./ui/button";
+import { Input } from "@/components/ui/input";
+import Alert from "./Alert";
+import { set, useForm } from "react-hook-form";
+
 
 const ClientInfoCard = ({ clientData }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(clientData);
   const [tempData, setTempData] = useState(clientData);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const handleEdit = () => {
     setTempData({ ...formData });
@@ -18,93 +23,119 @@ const ClientInfoCard = ({ clientData }) => {
     setIsEditing(false);
   };
 
+  const handleDelete = () => {
+    setIsDeleted(true);
+  };
+
   const handleSave = () => {
     setIsEditing(false);
+    setTempData({ ...formData });
     console.log("Saved data:", formData);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(`{${name}: ${value}}`);
-    setFormData((prev) => ({...prev,[name]: value,}));
+    console.log(name, value);
   };
 
-  const InfoRow = ({ label, value, name }) => (
-    <div className="flex flex-col sm:flex-row mb-2">
-      <span className="text-gray-600 w-40">{label}:</span>
-      {isEditing ? (
-        <input
-          type="text"
-          name={name}
-          value={value}
-          onChange={handleChange}
-          className="flex-1 px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      ) : (
-        <span className="flex-1 text-gray-800">{value}</span>
-      )}
-    </div>
-  );
+    const {
+      register,
+      handleSubmit,
+      watch,
+      trigger,
+      formState: { errors },
+    } = useForm();
+
+  const getInputType = (key, value) => {
+    if (key.toLowerCase().includes("email")) return "email";
+    if (key.toLowerCase().includes("phone")) return "tel";
+    if (typeof value === "number" || !isNaN(value)) return "number";
+    if (key.toLowerCase().includes("date")) return "date";
+    return "text";
+  };
+
+  const InfoRow = ({ label, value, name }) => {
+    const inputType = getInputType(name, value);
+
+    return (
+      <div className="flex justify-between items-center mb-1 text-sm">
+        <span className="text-gray-500 w-32 truncate">{label}:</span>
+        {isEditing ? (
+          <form onSubmit={handleSubmit(handleChange)}>
+            <Input
+              type={inputType}
+              name={name}
+              value={value}
+              onChange={handleChange}
+              className="flex-1 px-2 py-1 border rounded text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs"
+            />
+          </form>
+        ) : (
+          <span className="flex-1 text-gray-800 truncate">{value}</span>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto">
-      <div className="flex justify-between items-start mb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">
-          {isEditing ? (
-            <input
-              type="text"
-              name="name"
-              value={formData.name || ""}
-              onChange={handleChange}
-              className="px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    !isDeleted && (
+      <div className="bg-white rounded-md shadow-sm p-4 max-w-sm w-full mx-2 mb-4">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-lg font-semibold text-gray-700 truncate">
+            {isEditing ? (
+              <input
+                type={getInputType("name", formData.name)}
+                name="name"
+                value={formData.name || ""}
+                onChange={handleChange}
+                className="px-2 py-1 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+              />
+            ) : (
+              formData.name || ""
+            )}
+          </h2>
+          <div className="flex space-x-2">
+            {isEditing ? (
+              <>
+                <Button onClick={handleSave} type="button" variant="outline">
+                  <FaCheck />
+                </Button>
+                <Button onClick={handleCancel} type="button" variant="outline">
+                  <FaTimes />
+                </Button>
+              </>
+            ) : (
+              <div className="flex space-x-2">
+                <Button variant="outline" onClick={handleEdit} type="button">
+                  <FaPencilAlt />
+                </Button>
+                <Alert
+                  triggerText={
+                    <FaTrash className="border border-input bg-background hover:bg-accent hover:text-accent-foreground" />
+                  }
+                  title="Delete Client"
+                  description="Are you sure you want to delete this client?"
+                  actionText="Delete"
+                  cancelText="Cancel"
+                  onAction={handleDelete}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1">
+          {Object.entries(formData).map(([key, value]) => (
+            <InfoRow
+              key={key}
+              label={key.charAt(0).toUpperCase() + key.slice(1)}
+              value={value}
+              name={key}
             />
-          ) : (
-            formData.name || "<Client Name>"
-          )}
-        </h2>
-        {/* Edit and Save buttons */}
-        <div className="flex space-x-2">
-          {isEditing ? (
-            <>
-              <Button
-                onClick={handleSave}
-                type="Button"
-                className="p-2 text-green-600 hover:text-green-700 transition-colors"
-              >
-                <FaCheck />
-              </Button>
-              <Button
-                onClick={handleCancel}
-                type="Button"
-                className="p-2 text-red-600 hover:text-red-700 transition-colors"
-              >
-                <FaTimes />
-              </Button>
-            </>
-          ) : (
-            <Button
-              onClick={handleEdit}
-              type="Button"
-              className="p-2 text-gray-600 hover:text-gray-700 transition-colors"
-            >
-              <FaPencilAlt />
-            </Button>
-          )}
+          ))}
         </div>
       </div>
-
-      {/* Display only */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
-        {Object.entries(formData).map(([key, value]) => (
-          <InfoRow
-            key={key}
-            label={key.charAt(0).toUpperCase() + key.slice(1)}
-            value={value}
-            name={key}
-          />
-        ))}
-      </div>
-    </div>
+    )
   );
 };
 

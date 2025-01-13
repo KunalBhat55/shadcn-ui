@@ -24,9 +24,8 @@ function Register() {
 
   const onSubmit = (data) => console.log(data);
 
-  const 
-  handleNext = async () => {
-    const isValid = await trigger();
+  const handleNext = async () => {
+    const isValid = await trigger(); 
     console.log(isValid);
     if (isValid) {
       setStep(step + 1);
