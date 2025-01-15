@@ -35,6 +35,7 @@ const ClientInfoCard = ({ clientData }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
     console.log(name, value);
   };
 
@@ -46,16 +47,10 @@ const ClientInfoCard = ({ clientData }) => {
       formState: { errors },
     } = useForm();
 
-  const getInputType = (key, value) => {
-    if (key.toLowerCase().includes("email")) return "email";
-    if (key.toLowerCase().includes("phone")) return "tel";
-    if (typeof value === "number" || !isNaN(value)) return "number";
-    if (key.toLowerCase().includes("date")) return "date";
-    return "text";
-  };
+
 
   const InfoRow = ({ label, value, name }) => {
-    const inputType = getInputType(name, value);
+    
 
     return (
       <div className="flex justify-between items-center mb-1 text-sm">
@@ -63,7 +58,7 @@ const ClientInfoCard = ({ clientData }) => {
         {isEditing ? (
           <form onSubmit={handleSubmit(handleChange)}>
             <Input
-              type={inputType}
+              type="text"
               name={name}
               value={value}
               onChange={handleChange}
@@ -84,7 +79,7 @@ const ClientInfoCard = ({ clientData }) => {
           <h2 className="text-lg font-semibold text-gray-700 truncate">
             {isEditing ? (
               <input
-                type={getInputType("name", formData.name)}
+                type="text"
                 name="name"
                 value={formData.name || ""}
                 onChange={handleChange}
