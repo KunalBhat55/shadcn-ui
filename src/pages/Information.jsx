@@ -10,6 +10,7 @@ function Information() {
         defaultValue="account"
         className="w-full max-w-6xl rounded-lg shadow-md"
       >
+        {/* Tabs List */}
         <TabsList className="flex justify-between border-b border-gray-200 p-4">
           {[
             { value: "account", label: "Account" },
@@ -28,45 +29,50 @@ function Information() {
           ))}
         </TabsList>
 
+        {/* Tabs Content */}
+        
         <div className="">
-          {/* Account Tab */}
-          <TabsContent
-            className="rounded-lg shadow-md bg-gray-50 p-4 grid grid-cols-1 gap-4 md:grid-cols-2"
-            value="account"
-          >
-            <ClientInfoCard clientData={clientData} />
-            <ClientInfoCard clientData={productData} />
-            
-          </TabsContent>
-          {/* Password Tab */}
-          <TabsContent
-            className="rounded-lg shadow-md bg-gray-50 p-4"
-            value="password"
-          >
-            <ClientInfoCard clientData={productData} />
-          </TabsContent>
-          {/* Settings Tab */}
-          <TabsContent
-            className="rounded-lg shadow-md bg-gray-50 p-4"
-            value="settings"
-          >
-            <ClientInfoCard clientData={employeeData} />
-          </TabsContent>
-          {/* Notifications Tab */}
-          <TabsContent
-            className="rounded-lg shadow-md bg-gray-50 p-4"
-            value="notifications"
-          >
-            <h2>Notes & Events</h2>
-            <ClientInfoCard clientData={notesData} inputType={"textArea"}/>
-          </TabsContent>
-          {/* Privacy Tab */}
-          <TabsContent
-            className="rounded-lg shadow-md bg-gray-50 p-4"
-            value="privacy"
-          >
-            <Calendar />
-          </TabsContent>
+          {[
+            {
+              value: "account",
+              content: (
+                <>
+                  <ClientInfoCard clientData={clientData} />
+                  <ClientInfoCard clientData={productData} />
+                </>
+              ),
+              className: "grid grid-cols-1 gap-4 md:grid-cols-2",
+            },
+            {
+              value: "password",
+              content: <ClientInfoCard clientData={productData} />,
+            },
+            {
+              value: "settings",
+              content: <ClientInfoCard clientData={employeeData} />,
+            },
+            {
+              value: "notifications",
+              content: (
+                <>
+                  <h2>Notes & Events</h2>
+                  <ClientInfoCard clientData={notesData} inputType={"textArea"} />
+                </>
+              ),
+            },
+            {
+              value: "privacy",
+              content: <Calendar />,
+            },
+          ].map((tab) => (
+            <TabsContent
+              key={tab.value}
+              className={`rounded-lg shadow-md bg-gray-50 p-4 ${tab.className || ""}`}
+              value={tab.value}
+            >
+              {tab.content}
+            </TabsContent>
+          ))}
         </div>
       </Tabs>
     </div>
